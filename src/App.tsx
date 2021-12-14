@@ -1,26 +1,36 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react'
+import { Typography, Grid, Button } from '@mui/material'
+import { getAll } from './utils/nasaHelpers'
+import axios from 'axios'
+import { NasaImageData } from './types'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+export const App = () => {
+    const [data, setData] = useState<NasaImageData>()
+    const getInitialData = () => {
+        axios
+            .get(
+                'https://images-api.nasa.gov/search?&media_type=image&q=apollo%2011'
+            )
+            .then((response) => {
+                setData(response.data)
+            })
+    }
+    return (
+        <div className="App">
+            <Typography>space loops</Typography>
+            <Grid>
+                <Button onClick={() => getInitialData()}>Search!</Button>
+            </Grid>
+            <Grid container>
+                {data &&
+                    data.collection.items.map((image) => {
+                        return (
+                            <Grid item>
+                                <Typography>{image.href}</Typography>
+                            </Grid>
+                        )
+                    })}
+            </Grid>
+        </div>
+    )
 }
-
-export default App;
