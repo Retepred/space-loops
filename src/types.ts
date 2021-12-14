@@ -1,7 +1,7 @@
 export interface Image {
     data: any
     href: string
-    links: any[]
+    links: { href: string; rel: any; render: any }[]
 }
 
 export interface NasaImageData {
