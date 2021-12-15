@@ -9,9 +9,10 @@ import {
     styled,
     Radio,
     FormControlLabel,
+    Dialog,
 } from '@mui/material'
 import axios from 'axios'
-import { NasaImageData } from './types'
+import { Image, NasaImageData } from './types'
 
 const StyledImageListItem = styled(ImageListItem)`
     border: 1px solid black;
@@ -28,10 +29,23 @@ const StyledContainer = styled(Grid)`
     padding-right: 10rem;
 `
 
+const StyledDialog = styled(Dialog)`
+    padding-right: 4rem;
+    padding-left: 4rem;
+    width: 60rem;
+`
+
+const StyledDialogGrid = styled(Grid)`
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+`
+
 export const App = () => {
     const [data, setData] = useState<NasaImageData>()
     const [searchText, setSearchText] = useState('apollo%2011')
     const [searchSwitch, setSearchSwitch] = useState(true)
+    const [isOpen, setIsOpen] = useState(false)
+    const [imageDetail, setImageDetail] = useState<Image>()
     const getInitialData = () => {
         const searchString = searchSwitch
             ? '&media_type=image'
@@ -48,6 +62,11 @@ export const App = () => {
     const handleSearchSwitch = () => {
         setData(undefined)
         setSearchSwitch(!searchSwitch)
+    }
+    const handleImageClick = (data: Image) => {
+        console.log(data)
+        setImageDetail(data)
+        setIsOpen(true)
     }
     return (
         <div className="App">
@@ -86,13 +105,13 @@ export const App = () => {
                         checked={searchSwitch}
                         control={<Radio />}
                         label="images"
-                        onClick={(e) => handleSearchSwitch()}
+                        onClick={() => handleSearchSwitch()}
                     />
                     <FormControlLabel
                         checked={!searchSwitch}
                         control={<Radio />}
                         label="audio"
-                        onClick={(e) => handleSearchSwitch()}
+                        onClick={() => handleSearchSwitch()}
                     />
                 </Grid>
             </StyledContainer>
@@ -107,7 +126,10 @@ export const App = () => {
                                       }
                                     : item.links[0]
                                 return (
-                                    <StyledImageListItem key={showData.href}>
+                                    <StyledImageListItem
+                                        key={showData.href}
+                                        onClick={() => handleImageClick(item)}
+                                    >
                                         <img
                                             src={`${showData.href}`}
                                             srcSet={`${showData.href}`}
@@ -120,6 +142,36 @@ export const App = () => {
                     </ImageList>
                 )}
             </Grid>
+            <StyledDialog open={isOpen}>
+                {imageDetail && (
+                    <StyledDialogGrid
+                        container
+                        alignContent="center"
+                        justifyContent="center"
+                        spacing={3}
+                    >
+                        <Grid item>
+                            <Typography align="center" variant="h5">
+                                {imageDetail.data[0].title}
+                            </Typography>
+                        </Grid>
+                        <Grid item>
+                            <Typography align="center">
+                                {imageDetail.data[0].description}
+                            </Typography>
+                        </Grid>
+                        <Grid item>
+                            <img
+                                src={`${imageDetail.links[0].href}`}
+                                srcSet={`${imageDetail.links[0].href}`}
+                                alt={imageDetail.links[0].href}
+                                loading="lazy"
+                            />
+                        </Grid>
+                    </StyledDialogGrid>
+                )}
+                <Button onClick={() => setIsOpen(false)}>Close</Button>
+            </StyledDialog>
         </div>
     )
 }
