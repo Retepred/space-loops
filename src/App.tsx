@@ -12,7 +12,6 @@ import {
 } from '@mui/material'
 import axios from 'axios'
 import { NasaImageData } from './types'
-import { GeneratedIdentifierFlags } from 'typescript'
 
 const StyledImageListItem = styled(ImageListItem)`
     border: 1px solid black;
@@ -32,36 +31,42 @@ const StyledContainer = styled(Grid)`
 export const App = () => {
     const [data, setData] = useState<NasaImageData>()
     const [searchText, setSearchText] = useState('apollo%2011')
-    const [images, setImages] = useState(false)
-    const [audio, setAudio] = useState(false)
-    const [video, setVideo] = useState(false)
+    const [searchSwitch, setSearchSwitch] = useState(true)
     const getInitialData = () => {
+        const searchString = searchSwitch
+            ? '&media_type=image'
+            : '&media_type=audio'
         axios
             .get(
-                `https://images-api.nasa.gov/search?&media_type=image&q=${searchText}`
+                `https://images-api.nasa.gov/search?${searchString}&q=${searchText}`
             )
             .then((response) => {
                 setData(response.data)
+                console.log(response.data)
             })
+    }
+    const handleSearchSwitch = () => {
+        setData(undefined)
+        setSearchSwitch(!searchSwitch)
     }
     return (
         <div className="App">
             <StyledContainer container justifyContent="center" spacing={1}>
-                <Grid xs={3}>
+                <Grid item xs={12}>
                     <Typography align="center" variant="h3">
                         Space Loops
                     </Typography>
                 </Grid>
 
-                <Grid item xs={3}>
+                <Grid item>
                     <TextField
                         variant="standard"
                         fullWidth
-                        placeholder="What do you want to look for?"
+                        placeholder="What do you want to see?"
                         onChange={(e) => setSearchText(e.target.value)}
                     />
                 </Grid>
-                <Grid item xs={1}>
+                <Grid item>
                     <Button
                         fullWidth
                         variant="text"
@@ -78,41 +83,40 @@ export const App = () => {
                     justifyContent="center"
                 >
                     <FormControlLabel
-                        checked={images}
+                        checked={searchSwitch}
                         control={<Radio />}
                         label="images"
-                        onClick={(e) => setImages(!images)}
+                        onClick={(e) => handleSearchSwitch()}
                     />
                     <FormControlLabel
-                        checked={audio}
+                        checked={!searchSwitch}
                         control={<Radio />}
                         label="audio"
-                        onClick={(e) => setAudio(!audio)}
-                    />
-                    <FormControlLabel
-                        checked={video}
-                        onClick={(e) => setVideo(!video)}
-                        control={<Radio />}
-                        label="video"
+                        onClick={(e) => handleSearchSwitch()}
                     />
                 </Grid>
             </StyledContainer>
             <Grid container alignContent="center" justifyContent="center">
                 {data && (
                     <ImageList variant="quilted" cols={4} gap={5}>
-                        {data.collection.items.map((item) => {
-                            const data = item.links[0]
-                            return (
-                                <StyledImageListItem key={data.href}>
-                                    <img
-                                        src={`${data.href}`}
-                                        srcSet={`${data.href}`}
-                                        alt={data.href}
-                                        loading="lazy"
-                                    />
-                                </StyledImageListItem>
-                            )
-                        })}
+                        {data.collection.items.length > 0 &&
+                            data.collection.items.map((item) => {
+                                const showData = !searchSwitch
+                                    ? {
+                                          href: 'https://static.vecteezy.com/system/resources/previews/004/438/318/original/sound-recorder-glyph-icon-professional-music-microphone-musical-record-equipment-portable-audio-mic-wireless-recording-device-silhouette-symbol-negative-space-isolated-illustration-vector.jpg',
+                                      }
+                                    : item.links[0]
+                                return (
+                                    <StyledImageListItem key={showData.href}>
+                                        <img
+                                            src={`${showData.href}`}
+                                            srcSet={`${showData.href}`}
+                                            alt={showData.href}
+                                            loading="lazy"
+                                        />
+                                    </StyledImageListItem>
+                                )
+                            })}
                     </ImageList>
                 )}
             </Grid>
