@@ -6,14 +6,35 @@ import {
     ImageList,
     ImageListItem,
     TextField,
+    styled,
+    Radio,
+    FormControlLabel,
 } from '@mui/material'
-import { getAll } from './utils/nasaHelpers'
 import axios from 'axios'
 import { NasaImageData } from './types'
+import { GeneratedIdentifierFlags } from 'typescript'
 
-export const App = (props: any) => {
+const StyledImageListItem = styled(ImageListItem)`
+    border: 1px solid black;
+    width: 200px;
+    :hover {
+        box-shadow: 0 0 2px #1976d2;
+        border: 1px solid #1976d2;
+    }
+`
+
+const StyledContainer = styled(Grid)`
+    padding-top: 5rem;
+    padding-left: 10rem;
+    padding-right: 10rem;
+`
+
+export const App = () => {
     const [data, setData] = useState<NasaImageData>()
     const [searchText, setSearchText] = useState('apollo%2011')
+    const [images, setImages] = useState(false)
+    const [audio, setAudio] = useState(false)
+    const [video, setVideo] = useState(false)
     const getInitialData = () => {
         axios
             .get(
@@ -25,48 +46,71 @@ export const App = (props: any) => {
     }
     return (
         <div className="App">
-            <Grid
-                container
-                direction="column"
-                alignContent="center"
-                spacing={1}
-            >
-                <Grid item>
-                    <Typography variant="h2">Space Loops</Typography>
+            <StyledContainer container justifyContent="center" spacing={1}>
+                <Grid xs={3}>
+                    <Typography align="center" variant="h3">
+                        Space Loops
+                    </Typography>
                 </Grid>
-                <Grid item xs={6}>
+
+                <Grid item xs={3}>
                     <TextField
-                        variant="outlined"
+                        variant="standard"
                         fullWidth
+                        placeholder="What do you want to look for?"
                         onChange={(e) => setSearchText(e.target.value)}
                     />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={1}>
                     <Button
                         fullWidth
-                        variant="contained"
+                        variant="text"
                         onClick={() => getInitialData()}
                     >
                         Search!
                     </Button>
                 </Grid>
-            </Grid>
+                <Grid
+                    item
+                    container
+                    xs={12}
+                    alignContent="center"
+                    justifyContent="center"
+                >
+                    <FormControlLabel
+                        checked={images}
+                        control={<Radio />}
+                        label="images"
+                        onClick={(e) => setImages(!images)}
+                    />
+                    <FormControlLabel
+                        checked={audio}
+                        control={<Radio />}
+                        label="audio"
+                        onClick={(e) => setAudio(!audio)}
+                    />
+                    <FormControlLabel
+                        checked={video}
+                        onClick={(e) => setVideo(!video)}
+                        control={<Radio />}
+                        label="video"
+                    />
+                </Grid>
+            </StyledContainer>
             <Grid container alignContent="center" justifyContent="center">
                 {data && (
-                    <ImageList cols={4} gap={10} rowHeight={164}>
+                    <ImageList variant="quilted" cols={4} gap={5}>
                         {data.collection.items.map((item) => {
                             const data = item.links[0]
                             return (
-                                <ImageListItem key={data.href}>
+                                <StyledImageListItem key={data.href}>
                                     <img
-                                        height="164"
-                                        width="164"
-                                        src={`${data.href}?w=164&h=164&fit=crop&auto=format`}
-                                        srcSet={`${data.href}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
+                                        src={`${data.href}`}
+                                        srcSet={`${data.href}`}
                                         alt={data.href}
                                         loading="lazy"
                                     />
-                                </ImageListItem>
+                                </StyledImageListItem>
                             )
                         })}
                     </ImageList>
