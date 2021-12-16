@@ -4,9 +4,7 @@ import {
     Grid,
     Button,
     ImageList,
-    ImageListItem,
     TextField,
-    styled,
     Radio,
     FormControlLabel,
     Dialog,
@@ -14,32 +12,9 @@ import {
 } from '@mui/material'
 import axios from 'axios'
 import { Image, NasaImageData } from './types'
-
-const StyledImageListItem = styled(ImageListItem)`
-    border: 1px solid black;
-    width: 200px;
-    :hover {
-        box-shadow: 0 0 2px #1976d2;
-        border: 1px solid #1976d2;
-    }
-`
-
-const StyledContainer = styled(Grid)`
-    padding-top: 5rem;
-    padding-left: 10rem;
-    padding-right: 10rem;
-`
-
-const StyledDialogGrid = styled(Grid)`
-    padding-right: 4rem;
-    padding-left: 4rem;
-    padding-top: 1rem;
-    padding-bottom: 1rem;
-`
-
-const StyledTitle = styled(Typography)`
-    padding-right: 1rem;
-`
+import { StyledContainer, StyledTitle, StyledDialogGrid } from './styles'
+import { ImageSnapshot } from './ImageSnapshot'
+import { AudioSnapshot } from './AudioSnapshot'
 
 export const App = () => {
     const [data, setData] = useState<NasaImageData>()
@@ -62,7 +37,6 @@ export const App = () => {
                 console.log(response.data)
             })
             .catch((error) => {
-                console.log('got here')
                 setErrorPresent(true)
             })
     }
@@ -135,23 +109,16 @@ export const App = () => {
                     <ImageList variant="quilted" cols={4} gap={5}>
                         {data.collection.items.length > 0 &&
                             data.collection.items.map((item) => {
-                                const showData = !searchSwitch
-                                    ? {
-                                          href: 'https://static.vecteezy.com/system/resources/previews/004/438/318/original/sound-recorder-glyph-icon-professional-music-microphone-musical-record-equipment-portable-audio-mic-wireless-recording-device-silhouette-symbol-negative-space-isolated-illustration-vector.jpg',
-                                      }
-                                    : item.links[0]
-                                return (
-                                    <StyledImageListItem
-                                        key={showData.href}
-                                        onClick={() => handleImageClick(item)}
-                                    >
-                                        <img
-                                            src={`${showData.href}`}
-                                            srcSet={`${showData.href}`}
-                                            alt={showData.href}
-                                            loading="lazy"
-                                        />
-                                    </StyledImageListItem>
+                                return searchSwitch ? (
+                                    <ImageSnapshot
+                                        item={item}
+                                        handleImageClick={handleImageClick}
+                                    />
+                                ) : (
+                                    <AudioSnapshot
+                                        item={item}
+                                        handleImageClick={handleImageClick}
+                                    />
                                 )
                             })}
                     </ImageList>
