@@ -11,4 +11,4 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 3. Results displayed in Grid format
 4. Ability to click on an asset for title, description, larger image (or ability to click again to play audio in new tab)
 
-![Alt text](screenshot.png?raw=true 'Screenshot')
+![Alt text](./public/screenshot.png?raw=true 'Screenshot')
