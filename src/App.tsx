@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import {
-    Typography,
     Grid,
     Button,
     ImageList,
@@ -12,7 +11,7 @@ import {
 } from '@mui/material'
 import axios from 'axios'
 import { Image, NasaImageData } from './types'
-import { StyledContainer, StyledTitle, StyledDialogGrid } from './styles'
+import { StyledContainer, StyledTitle } from './styles'
 import { ImageSnapshot } from './ImageSnapshot'
 import { AudioSnapshot } from './AudioSnapshot'
 import { ImageDetailDialog } from './ImageDetailDialog'
@@ -40,6 +39,7 @@ export const App = () => {
             })
             .catch((error) => {
                 setErrorPresent(true)
+                console.log(error)
             })
     }
     const handleSearchSwitch = () => {
@@ -68,7 +68,11 @@ export const App = () => {
                     <StyledTitle align="center" variant="h3">
                         Space Loops
                     </StyledTitle>
-                    <img src={'orbit.png'} width="60px" />
+                    <img
+                        src={'orbit.png'}
+                        alt="icon of an orbit"
+                        width="60px"
+                    />
                 </Grid>
 
                 <Grid item>
