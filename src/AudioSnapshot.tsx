@@ -19,7 +19,6 @@ export const AudioSnapshot = (props: AudioSnapshotProps) => {
         >
             <ImageListItem>
                 <img
-                    width="50px"
                     src={microphoneLink}
                     srcSet={microphoneLink}
                     alt={microphoneLink}

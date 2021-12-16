@@ -15,6 +15,8 @@ import { Image, NasaImageData } from './types'
 import { StyledContainer, StyledTitle, StyledDialogGrid } from './styles'
 import { ImageSnapshot } from './ImageSnapshot'
 import { AudioSnapshot } from './AudioSnapshot'
+import { ImageDetailDialog } from './ImageDetailDialog'
+import { AudioDetailDialog } from './AudioDetailDialog'
 
 export const App = () => {
     const [data, setData] = useState<NasaImageData>()
@@ -111,11 +113,13 @@ export const App = () => {
                             data.collection.items.map((item) => {
                                 return searchSwitch ? (
                                     <ImageSnapshot
+                                        key={item.href}
                                         item={item}
                                         handleImageClick={handleImageClick}
                                     />
                                 ) : (
                                     <AudioSnapshot
+                                        key={item.href}
                                         item={item}
                                         handleImageClick={handleImageClick}
                                     />
@@ -129,33 +133,11 @@ export const App = () => {
                 open={isOpen}
                 onClose={() => setIsOpen(false)}
             >
-                {imageDetail && (
-                    <StyledDialogGrid
-                        container
-                        alignContent="center"
-                        justifyContent="center"
-                        direction="column"
-                        spacing={3}
-                    >
-                        <Grid item>
-                            <Typography align="center" variant="h5">
-                                {imageDetail.data[0].title}
-                            </Typography>
-                        </Grid>
-                        <Grid item>
-                            <Typography align="center">
-                                {imageDetail.data[0].description}
-                            </Typography>
-                        </Grid>
-                        <Grid item container justifyContent="center">
-                            <img
-                                src={`${imageDetail.links[0].href}`}
-                                srcSet={`${imageDetail.links[0].href}`}
-                                alt={imageDetail.links[0].href}
-                                loading="lazy"
-                            />
-                        </Grid>
-                    </StyledDialogGrid>
+                {imageDetail && searchSwitch && (
+                    <ImageDetailDialog imageDetail={imageDetail} />
+                )}
+                {imageDetail && !searchSwitch && (
+                    <AudioDetailDialog audioDetail={imageDetail} />
                 )}
             </Dialog>
             <Dialog open={errorPresent} onClose={() => setErrorPresent(false)}>
