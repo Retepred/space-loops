@@ -46,7 +46,8 @@ export const App = () => {
     const [searchSwitch, setSearchSwitch] = useState(true)
     const [isOpen, setIsOpen] = useState(false)
     const [imageDetail, setImageDetail] = useState<Image>()
-    const getInitialData = () => {
+
+    const getData = () => {
         const searchString = searchSwitch
             ? '&media_type=image'
             : '&media_type=audio'
@@ -68,6 +69,10 @@ export const App = () => {
         setImageDetail(data)
         setIsOpen(true)
     }
+    const handleEnter = (e: React.KeyboardEvent<HTMLDivElement>) => {
+        e.key === 'Enter' && getData()
+    }
+
     return (
         <div className="App">
             <StyledContainer container justifyContent="center" spacing={1}>
@@ -83,14 +88,11 @@ export const App = () => {
                         fullWidth
                         placeholder="What do you want to see?"
                         onChange={(e) => setSearchText(e.target.value)}
+                        onKeyDown={(e) => handleEnter(e)}
                     />
                 </Grid>
                 <Grid item>
-                    <Button
-                        fullWidth
-                        variant="text"
-                        onClick={() => getInitialData()}
-                    >
+                    <Button fullWidth variant="text" onClick={() => getData()}>
                         Search!
                     </Button>
                 </Grid>
