@@ -10,6 +10,7 @@ import {
     Radio,
     FormControlLabel,
     Dialog,
+    Alert,
 } from '@mui/material'
 import axios from 'axios'
 import { Image, NasaImageData } from './types'
@@ -42,6 +43,7 @@ export const App = () => {
     const [searchSwitch, setSearchSwitch] = useState(true)
     const [isOpen, setIsOpen] = useState(false)
     const [imageDetail, setImageDetail] = useState<Image>()
+    const [errorPresent, setErrorPresent] = useState(false)
 
     const getData = () => {
         const searchString = searchSwitch
@@ -54,6 +56,10 @@ export const App = () => {
             .then((response) => {
                 setData(response.data)
                 console.log(response.data)
+            })
+            .catch((error) => {
+                console.log('got here')
+                setErrorPresent(true)
             })
     }
     const handleSearchSwitch = () => {
@@ -173,6 +179,11 @@ export const App = () => {
                         </Grid>
                     </StyledDialogGrid>
                 )}
+            </Dialog>
+            <Dialog open={errorPresent} onClose={() => setErrorPresent(false)}>
+                <Alert severity="error">
+                    An error has ocurred, please try again.
+                </Alert>
             </Dialog>
         </div>
     )
