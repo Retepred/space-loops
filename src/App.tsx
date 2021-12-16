@@ -100,13 +100,13 @@ export const App = () => {
                         checked={searchSwitch}
                         control={<Radio />}
                         label="images"
-                        onClick={() => handleSearchSwitch()}
+                        onChange={() => handleSearchSwitch()}
                     />
                     <FormControlLabel
                         checked={!searchSwitch}
                         control={<Radio />}
                         label="audio"
-                        onClick={() => handleSearchSwitch()}
+                        onChange={() => handleSearchSwitch()}
                     />
                 </Grid>
             </StyledContainer>
