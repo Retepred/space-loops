@@ -29,13 +29,9 @@ const StyledContainer = styled(Grid)`
     padding-right: 10rem;
 `
 
-const StyledDialog = styled(Dialog)`
+const StyledDialogGrid = styled(Grid)`
     padding-right: 4rem;
     padding-left: 4rem;
-    width: 60rem;
-`
-
-const StyledDialogGrid = styled(Grid)`
     padding-top: 1rem;
     padding-bottom: 1rem;
 `
@@ -144,12 +140,17 @@ export const App = () => {
                     </ImageList>
                 )}
             </Grid>
-            <StyledDialog open={isOpen}>
+            <Dialog
+                maxWidth="lg"
+                open={isOpen}
+                onClose={() => setIsOpen(false)}
+            >
                 {imageDetail && (
                     <StyledDialogGrid
                         container
                         alignContent="center"
                         justifyContent="center"
+                        direction="column"
                         spacing={3}
                     >
                         <Grid item>
@@ -162,7 +163,7 @@ export const App = () => {
                                 {imageDetail.data[0].description}
                             </Typography>
                         </Grid>
-                        <Grid item>
+                        <Grid item container justifyContent="center">
                             <img
                                 src={`${imageDetail.links[0].href}`}
                                 srcSet={`${imageDetail.links[0].href}`}
@@ -172,8 +173,7 @@ export const App = () => {
                         </Grid>
                     </StyledDialogGrid>
                 )}
-                <Button onClick={() => setIsOpen(false)}>Close</Button>
-            </StyledDialog>
+            </Dialog>
         </div>
     )
 }
