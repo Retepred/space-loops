@@ -37,6 +37,10 @@ const StyledDialogGrid = styled(Grid)`
     padding-bottom: 1rem;
 `
 
+const StyledTitle = styled(Typography)`
+    padding-right: 1rem;
+`
+
 export const App = () => {
     const [data, setData] = useState<NasaImageData>()
     const [searchText, setSearchText] = useState('apollo%2011')
@@ -78,10 +82,17 @@ export const App = () => {
     return (
         <div className="App">
             <StyledContainer container justifyContent="center" spacing={1}>
-                <Grid item xs={12}>
-                    <Typography align="center" variant="h3">
+                <Grid
+                    item
+                    container
+                    direction="row"
+                    justifyContent="center"
+                    xs={12}
+                >
+                    <StyledTitle align="center" variant="h3">
                         Space Loops
-                    </Typography>
+                    </StyledTitle>
+                    <img src={'orbit.png'} width="60px" />
                 </Grid>
 
                 <Grid item>
